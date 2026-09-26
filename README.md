@@ -1,172 +1,167 @@
-# nRF52840 BLE SWD Companion
+# Flash Game & Watch over BLE
 
 [![CI](https://github.com/bve/gnw-ble-swd/actions/workflows/ci.yml/badge.svg)](https://github.com/bve/gnw-ble-swd/actions/workflows/ci.yml)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-I built this firmware to use an **nRF52840 SuperMini** as a wireless SWD
-companion for my Nintendo Game & Watch. It turns BLE commands into SWD
-transactions, exposing target memory, core registers, and execution control
-over a documented BLE protocol.
+## 1. The goal: update retro-go without a USB cable
 
-This repository contains **only the nRF companion firmware** and the board files,
-build scripts, tests, and documentation needed to develop it. It has no retro-go
-or GnWManager build dependency and contains no console firmware, games, or host
-application. A compatible BLE client is required to control the bridge; use the
-[protocol reference](docs/protocol.md) to integrate your own tools.
+I built this project so I can flash **retro-go on my Game & Watch over Bluetooth**.
+An nRF52840 board stays wired inside the console and receives firmware from my
+computer. The Game & Watch powers the nRF, so subsequent console updates need
+**no USB connection to either board**.
 
-```mermaid
-flowchart LR
-    HOST["Your BLE client"] <-->|"Documented BLE protocol"| NRF["nRF52840 companion"]
-    NRF <-->|"SWDIO / SWCLK / NRST"| TARGET["Target MCU"]
+```text
+Computer → Bluetooth LE → nRF52840 → five wires → Game & Watch
 ```
 
-## Features
+This repository includes the **nRF firmware and the computer-side BLE client**.
+I tested it on Linux with a Game & Watch Zelda, STM32H7B0, and 64 MiB MX25U51245
+flash. Start with an already unlocked console prepared for retro-go. Initial
+console unlocking is outside this guide.
 
-- SWD memory and core register access, halt, resume, reset, and reset-and-halt.
-- CRC-protected 16 KiB blocks, a four-request window, and batched memory writes.
-- SWCLK ceiling from 100 kHz to 32 MHz, with SPIM3 EasyDMA for the fast data phase.
-- Requested BLE 2M PHY, MTU 247, data length extension, and a 15 ms interval.
-- Link and power diagnostics, plus idle power management that keeps BLE available.
-- BLE command to enter the existing Adafruit Legacy DFU bootloader.
-- Application-only DFU ZIP generation for USB installation and later BLE updates.
+## 2. Prepare an nRF52840 SuperMini and modify its power supply
 
-I tested the bridge with my **Game & Watch Zelda, STM32H7B0, and 64 MiB
-MX25U51245 external flash**. The SWD memory engine is separate from the BLE
-transport, but I have not validated other ARM targets. Target-specific
-flash algorithms run in the host/target tooling; this firmware supplies SWD
-access. It is not a CMSIS-DAP BLE implementation or a GDB server.
+You need an **nRF52840 SuperMini**, five thin wires, and a computer with Bluetooth
+LE and Python 3.10+. The commands below use a Linux/POSIX shell.
 
-## Wiring
+### Install the nRF firmware once
 
-I use the SuperMini board shown below, which I modified to run directly from
-my Game & Watch's **1.8 V supply**. **No level shifter is needed in my build:**
-the nRF GPIO and the target use the same logic voltage.
-
-I made these hardware modifications:
-
-1. I removed the board's power-path MOSFET and the diode next to it.
-2. I joined the two marked capacitor terminals with solder to bridge **VDD and VDDH**;
-   see the [close-up below](#solder-bridge).
-3. I powered the joined VDD/VDDH rail directly from the Game & Watch's 1.8 V
-   supply pin and connected a common ground.
-
-![Modified SuperMini: remove the power-path MOSFET and adjacent diode, join VDD and VDDH, power at 1.8 V, and connect SWD directly](docs/images/supermini-1v8-modification.png)
-
-### Solder bridge
-
-I joined these two adjacent capacitor terminals with solder. With USB above
-the MCU, they lie along its upper-left edge, on the ends of the capacitors
-facing the MCU: **VDD is the upper-right marked terminal;
-VDDH is the lower-left one**. Keep both capacitors installed and join only these
-two terminals with solder. Leave their opposite terminals untouched.
-
-![Close-up: solder together the two highlighted capacitor terminals labeled VDD and VDDH; the orange line shows the bridge](docs/images/supermini-vdd-vddh-solder-bridge.png)
-
-The orange line shows the physical solder bridge. The overview's supply inset
-shows the same connection electrically. [Image notes](docs/images/README.md).
-
-This puts the nRF52840 in Normal Voltage mode. It is a physical board
-modification; no firmware or UICR/REGOUT0 change is required for this supply mode.
-See the [Nordic power-supply reference](https://docs.nordicsemi.com/r/bundle/ps_nrf52840/page/power.html)
-and [hardware and bootloader setup](docs/hardware.md) for power and USB details.
-
-| Modified SuperMini connection | Game & Watch connection |
-| --- | --- |
-| Joined VDD / VDDH | 1.8 V supply |
-| GND | Common ground |
-| P0.06 / D1 | SWDIO, directly |
-| P0.08 / D0 | SWCLK, directly |
-| P0.20 / D3 | Target NRST, directly; open-drain |
-| P0.17 / D2 | Unconnected; no level translator is used |
-
-Arduino labels in this table refer to the pictured board; use the Nordic GPIO
-numbers when checking another revision. An unmodified SuperMini running at
-3.3 V cannot use these direct SWD connections to a 1.8 V target.
-
-The firmware expects a compatible Adafruit/nice!nano bootloader with **S140 6.1.1** and
-Legacy BLE DFU. The application starts at `0x26000`; neither bootloader nor
-SoftDevice images are included in the application package.
-
-## Build and install
-
-Use PlatformIO Core, either installed already or through the development
-requirements. The following commands use Python 3.10+ and a POSIX shell:
+Before modifying the board, install the companion firmware using the SuperMini's
+USB port. This is the one-time setup; later Game & Watch updates use BLE.
+The board needs a compatible Adafruit/nice!nano bootloader with **S140 6.1.1**;
+check [bootloader setup](docs/hardware.md#bootloader-requirements) first.
 
 ```bash
 git clone https://github.com/bve/gnw-ble-swd.git
 cd gnw-ble-swd
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-dev.txt
-.venv/bin/pio run -e supermini
-```
-
-On Windows, use `.venv\Scripts\python.exe` and `.venv\Scripts\pio.exe`.
-In the PlatformIO IDE, open this directory and choose the `supermini` environment.
-The platform and framework versions are pinned in [platformio.ini](platformio.ini).
-
-After checking bootloader compatibility, install the application through USB:
-
-```bash
 .venv/bin/pio run -e supermini -t upload --upload-port /dev/ttyACM0
 ```
 
-Replace the serial port for your system. Without `-t upload`, PlatformIO only
-builds. The running application advertises as **`GW-SWD`**.
+Replace `/dev/ttyACM0` with the SuperMini's serial port. The installed firmware
+advertises as **GW-SWD**. Disconnect power before making the hardware changes.
 
-Build outputs are in `.pio/build/supermini/`:
+### Change the supply to 1.8 V
 
-| File | Purpose |
-| --- | --- |
-| `firmware.elf` | Linked application with debug symbols |
-| `firmware.hex` | Application image at its linked flash address |
-| `bridge-dfu.zip` | Legacy DFU application package for nRF52840 / S140 6.1.1 |
+I made three changes to the pictured SuperMini:
 
-The DFU archive contains the raw application `.bin`, its init packet, and the
-package manifest. The build does not emit a separate `firmware.bin` file.
+1. I removed the power-path MOSFET and the diode next to it.
+2. I joined the two marked capacitor terminals with solder, connecting **VDD to VDDH**.
+3. I powered that joined rail from the Game & Watch's **1.8 V supply**.
 
-## BLE integration and updates
+**No level shifter is needed in my build:** the nRF and Game & Watch use the same
+1.8 V logic level. These direct connections require the modified power circuit.
 
-The service UUID is `67777a10-80f1-4e94-9b4a-1c3059860001`.
-Write requests to the RX characteristic ending in `0002` and subscribe to
-responses on the TX characteristic ending in `0003`. See
-[the protocol reference](docs/protocol.md) for framing, commands, status codes,
-and a complete INFO request example.
+<details>
+<summary>See the board modifications and exact solder points</summary>
 
-A compatible client can send the `DFU` command to release SWD/NRST and restart
-the nRF into its existing bootloader. Then transfer `bridge-dfu.zip` with an
-Adafruit-compatible **Nordic Legacy DFU** client, using Packet Receipt Notification
-**8 or lower**. Nordic nRF DFU on a phone is one option. The bootloader may
-advertise as `AdaDFU` and use a different address from the application.
+![Remove the power-path MOSFET and adjacent diode; join VDD and VDDH for 1.8 V power](docs/images/supermini-1v8-modification.png)
 
-This repository does not include a host uploader. The package updates only the
-application; it does not install the bootloader or SoftDevice. Secure DFU and
-MCUboot use different formats. Single-bank DFU has no automatic rollback and
-can require USB recovery after an interrupted update. Test a complete update
-and return to `GW-SWD` before enclosing the hardware.
+### Solder bridge
 
-## Development
+I joined these two adjacent capacitor terminals on the MCU-facing side.
+**VDD is the upper-right marked terminal; VDDH is the lower-left one.**
+Both capacitors stay installed; leave their opposite terminals untouched.
 
-Native tests require Python and `g++`; they do not need PlatformIO or BLE hardware:
+![The orange line joins the VDD and VDDH capacitor terminals](docs/images/supermini-vdd-vddh-solder-bridge.png)
+
+</details>
+
+See [hardware details](docs/hardware.md) for power isolation and USB recovery.
+The joined rail must stay at 1.8 V when connected to the console.
+
+## 3. Solder just five wires to the Game & Watch
+
+| Wire | Game & Watch | Modified SuperMini |
+| ---: | --- | --- |
+| 1 | 1.8 V supply | VDD, already bridged to VDDH |
+| 2 | GND | GND |
+| 3 | SWDIO | P0.06 / D1 |
+| 4 | SWCLK | P0.08 / D0 |
+| 5 | NRST | P0.20 / D3 |
+
+These are the only five connections between the boards. **Leave P0.17 / D2
+unconnected.** Use the numbered GPIO pins above, not the nRF's own DIO/CLK debug
+pads. NRST goes to the Game & Watch reset signal, not the SuperMini reset pin.
+
+Power on the console. It now powers the nRF, and **GW-SWD** should be discoverable
+over Bluetooth. No USB cable is needed for the following steps.
+
+## 4. Flash retro-go through BLE
+
+Run these commands from the `gnw-ble-swd` directory. The setup in step 2 already
+installed the BLE client dependencies. If you only need the client on another
+computer, create `.venv` and install `requirements.txt` there.
+
+### Find your bridge
 
 ```bash
-python3 -m unittest discover -s tests/native -v
+.venv/bin/python tools/gnw_ble.py scan
 ```
 
-Tests exercise the production SWD and memory code with simulated peripherals,
-including clock edges, parity, posted reads, address boundaries, error handling,
-and idle timing. CI runs these tests and builds the firmware and DFU archive.
-See [architecture](docs/architecture.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+Copy the address shown next to **GW-SWD**, then select it:
 
-## Limitations and license
+```bash
+export GNW_BLE_DEVICE='AA:BB:CC:DD:EE:FF'
+.venv/bin/python tools/gnw_ble.py status
+.venv/bin/python tools/gnw_ble.py --frequency 1000000 gnw info
+```
 
-The BLE service is currently **open, without pairing or authorization**. A nearby
-client can control SWD or request DFU. Use it in a trusted radio environment.
-The firmware does not automatically unlock protected targets.
+Replace the example address with yours. `status` checks the nRF connection;
+`gnw info` connects to and resets/halts the console to load the flash helper.
+Check that it identifies your console and flash correctly before continuing.
 
-Project-owned source and documentation are licensed under **GNU GPL version 3**
-(`GPL-3.0-only`); see [LICENSE](LICENSE). The complete companion application source
-is provided here. **Nordic SoftDevice remains a precompiled vendor radio stack**,
-not open-source code supplied by this project. Other dependencies retain their
-own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+### Send the two retro-go images
 
-Game & Watch is a Nintendo trademark. This is an independent community project.
+Build retro-go separately for your console, flash size, and memory layout.
+Its build produces **gw_retro_go_intflash.bin** and
+**gw_retro_go_extflash.bin**. Use the matching pair from the same build.
+
+For the **internal bank 1 / external offset 0** layout I use, run:
+
+```bash
+.venv/bin/python tools/gnw_ble.py gnw \
+  flash bank1 /path/to/gw_retro_go_intflash.bin -- \
+  flash ext /path/to/gw_retro_go_extflash.bin -- \
+  start bank1
+```
+
+Replace both `/path/to/...` entries with your actual image paths. The client
+sends the images over BLE, the nRF programs the console through SWD, and
+GnWManager verifies the written data before `start bank1` launches retro-go.
+Keep the console powered until the command completes successfully. If your
+build uses a different bank or external offset, use its corresponding layout.
+
+For each later update, rebuild retro-go and repeat this command. The nRF stays
+installed in the console. If communication is unstable, add `--frequency 1000000`
+before `gnw`; the default SWD ceiling is 32 MHz.
+
+<details>
+<summary>Optional: update the nRF companion itself over BLE</summary>
+
+With `GNW_BLE_DEVICE` set, build the companion application and upload its DFU package:
+
+```bash
+.venv/bin/pio run -e supermini
+.venv/bin/python tools/gnw_ble.py ota .pio/build/supermini/bridge-dfu.zip
+```
+
+This updates the **nRF application**. The retro-go `.bin` images above update the
+**Game & Watch**. The DFU package does not replace the bootloader or SoftDevice;
+an interrupted single-bank update can require USB recovery.
+
+</details>
+
+## More information
+
+- [Hardware and bootloader details](docs/hardware.md)
+- [BLE protocol](docs/protocol.md) and [architecture](docs/architecture.md)
+- [Development and tests](CONTRIBUTING.md)
+- Client commands: `.venv/bin/python tools/gnw_ble.py --help`
+
+The BLE service has no pairing or authorization requirement; use it in a trusted
+radio environment. Project-owned firmware, client, and documentation are licensed
+under [GPL-3.0](LICENSE). Nordic SoftDevice remains an external vendor stack;
+see [third-party notices](THIRD_PARTY_NOTICES.md). Game & Watch is a Nintendo
+trademark; this is an independent community project.

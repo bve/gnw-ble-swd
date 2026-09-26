@@ -2,13 +2,13 @@
 
 Copyright (C) 2026 bve and contributors.
 
-The companion-specific source, board configuration, build scripts, native tests,
+The companion firmware, BLE client, board configuration, build scripts, tests,
 and documentation in this repository are licensed under GNU GPL version 3 only
 (`GPL-3.0-only`). See [LICENSE](LICENSE). I extracted the BLE companion from my
 Game & Watch integration and published it here as an independent project.
 No retro-go or emulator implementation is included.
 
-Dependencies are obtained separately by PlatformIO and keep their own licenses.
+Dependencies are obtained separately by PlatformIO or pip and keep their own licenses.
 This project's GPL notice does not relicense them. Source links below identify
 the upstream components; consult the notices in the exact installed package for
 the terms applying to each file.
@@ -16,6 +16,8 @@ the terms applying to each file.
 | Component | Version / source | License information |
 | --- | --- | --- |
 | PlatformIO Core | 6.1.19; [platformio-core](https://github.com/platformio/platformio-core) | Apache-2.0 |
+| Bleak | 1.1.1; [source](https://github.com/hbldh/bleak) | MIT |
+| GnWManager | 0.23.0; [source](https://github.com/BrianPugh/gnwmanager) | Apache-2.0 |
 | PlatformIO Nordic nRF52 platform | 10.12.0; [platform-nordicnrf52](https://github.com/platformio/platform-nordicnrf52) | Apache-2.0 |
 | Adafruit nRF52 Arduino framework | PlatformIO package 1.10700.0, upstream 1.7.0; [source](https://github.com/adafruit/Adafruit_nRF52_Arduino/tree/1.7.0) | Core LGPL-2.1-or-later; bundled components have individual notices |
 | Adafruit Bluefruit52 library | Included in that framework; [source and license](https://github.com/adafruit/Adafruit_nRF52_Arduino/tree/1.7.0/libraries/Bluefruit52Lib) | MIT |
@@ -33,8 +35,9 @@ needed beyond this repository are resolved by the PlatformIO configuration.
 
 ## What is open here
 
-The full project-owned nRF application is available in source form, including
-the BLE service, SWD engine, memory engine, diagnostics, and DFU-entry command.
+The full project-owned nRF application and BLE client are available in source
+form, including the BLE service, SWD engine, memory engine, diagnostics,
+GnWManager backend, and companion updater.
 There is no private application source required to build it.
 
 Nordic SoftDevice is a precompiled vendor BLE stack. Its implementation is not

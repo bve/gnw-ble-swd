@@ -1,0 +1,2 @@
+bleak==1.1.1
+gnwmanager==0.23.0

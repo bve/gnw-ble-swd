@@ -2,7 +2,8 @@
 
 The application is built on Adafruit's Arduino nRF52 framework and its Bluefruit
 BLE API. PlatformIO obtains the framework and toolchain; no retro-go source tree
-or host application is required.
+is required. The companion's Python client lives in `tools/` and has separate
+runtime dependencies in `requirements.txt`.
 
 | Component | Responsibility |
 | --- | --- |
@@ -18,6 +19,9 @@ or host application is required.
 | `bridge.ld` | Application memory layout and isolated SPIM3 TX RAM region |
 | `scripts/package_dfu.py` | Application-only Legacy DFU package generation |
 | `tests/native/` | Host-compiled production-code tests with peripheral stubs |
+| `tools/gnw_ble.py` | Command-line entry point for discovery, diagnostics, console flashing, and companion updates |
+| `tools/ble_swd/` | BLE transport, GnWManager backend, diagnostics, and Legacy DFU client |
+| `tests/ble_swd/` | Simulated BLE client, framing, failure handling, and DFU tests |
 
 ## Command processing
 
@@ -76,5 +80,5 @@ validation, and idle timing including timer wraparound. CI also compiles the
 complete nRF firmware and checks the generated DFU archive.
 
 These checks do not replace radio, voltage, or bootloader validation on hardware.
-I extracted this source from my working Zelda/SuperMini integration. This
-repository does not include the host tools, private logs, or console images.
+I extracted this source and the BLE client from my working Zelda/SuperMini
+integration. This repository does not include console images or private logs.

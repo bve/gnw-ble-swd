@@ -3,15 +3,16 @@
 Issues and pull requests are welcome. Keep code, comments, documentation, commit
 messages, and discussions in this repository in English.
 
-This repository covers the nRF companion firmware. Keep console firmware,
-emulators, games, and host applications in separate projects. Host integrations
-should use the documented protocol rather than introducing target application
-dependencies into the firmware.
+This repository covers the nRF companion firmware and its BLE client in `tools/`.
+Keep console firmware, emulators, and games in separate projects. The host client
+uses GnWManager for target-specific operations and the documented BLE protocol
+to communicate with the nRF firmware.
 
 Before submitting a change, run:
 
 ```bash
 python3 -m unittest discover -s tests/native -v
+python3 -m unittest discover -s tests/ble_swd -v
 pio run -e supermini
 ```
 
