@@ -3,9 +3,10 @@
 [![CI](https://github.com/bve/gnw-ble-swd/actions/workflows/ci.yml/badge.svg)](https://github.com/bve/gnw-ble-swd/actions/workflows/ci.yml)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-## 1. The goal: update retro-go without a USB cable
+## 1. The goal: flash retro-go without a USB mod or ST-Link
 
-I built this project so I can flash **retro-go on my Game & Watch over Bluetooth**.
+I built this project so I can flash **retro-go on my Game & Watch over Bluetooth,
+without a USB mod on the console or an ST-Link programmer**.
 An nRF52840 board stays wired inside the console and receives firmware from my
 computer. The Game & Watch powers the nRF, so subsequent console updates need
 **no USB connection to either board**.
