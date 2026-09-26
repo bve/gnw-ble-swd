@@ -38,21 +38,42 @@ access. It is not a CMSIS-DAP BLE implementation or a GDB server.
 
 ## Wiring
 
-Read [hardware and bootloader setup](docs/hardware.md) before connecting boards.
-Game & Watch uses approximately **1.8 V logic**. A normal 3.3 V SuperMini needs
-level translation for SWDIO and SWCLK. Direct wiring requires a verified,
-compatible nRF VDD, including with USB attached.
+The maintainer's build uses the SuperMini board shown below, modified to run
+directly from the Game & Watch's **1.8 V supply**. **No level shifter is needed
+in this build:** the nRF GPIO and the target use the same logic voltage.
 
-| Nordic GPIO | Bridge signal |
+The hardware modifications are:
+
+1. Remove the board's power-path MOSFET and the diode next to it.
+2. Bridge the nRF **VDD and VDDH** supply nets.
+3. Power the joined VDD/VDDH rail directly from the Game & Watch's 1.8 V supply
+   pin and connect a common ground.
+
+![Modified SuperMini: remove the power-path MOSFET and adjacent diode, join VDD and VDDH, power at 1.8 V, and connect SWD directly](docs/images/supermini-1v8-modification.png)
+
+The inset shows the electrical VDD–VDDH connection, not a physical jumper route:
+VDDH is not labeled in the supplied pinout. Identify the net by continuity on
+your board. [Image notes](docs/images/README.md).
+
+This puts the nRF52840 in Normal Voltage mode. It is a physical board
+modification; no firmware or UICR/REGOUT0 change is required for this supply mode.
+See the [Nordic power-supply reference](https://docs.nordicsemi.com/r/bundle/ps_nrf52840/page/power.html)
+and [hardware and bootloader setup](docs/hardware.md) for power and USB details.
+
+| Modified SuperMini connection | Game & Watch connection |
 | --- | --- |
-| P0.06 | SWDIO |
-| P0.08 | SWCLK |
-| P0.20 | Target NRST, open-drain |
-| P0.17 | Optional SWDIO level translator direction |
+| Joined VDD / VDDH | 1.8 V supply |
 | GND | Common ground |
+| P0.06 / D1 | SWDIO, directly |
+| P0.08 / D0 | SWCLK, directly |
+| P0.20 / D3 | Target NRST, directly; open-drain |
+| P0.17 / D2 | Unconnected; no level translator is used |
 
-These are Nordic GPIO numbers, not clone-specific `D0`/`D1` labels. The firmware
-expects a compatible Adafruit/nice!nano bootloader with **S140 6.1.1** and
+Arduino labels in this table refer to the pictured board; use the Nordic GPIO
+numbers when checking another revision. An unmodified SuperMini running at
+3.3 V cannot use these direct SWD connections to a 1.8 V target.
+
+The firmware expects a compatible Adafruit/nice!nano bootloader with **S140 6.1.1** and
 Legacy BLE DFU. The application starts at `0x26000`; neither bootloader nor
 SoftDevice images are included in the application package.
 

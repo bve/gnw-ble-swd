@@ -42,3 +42,12 @@ source provided by this repository. The bootloader and SoftDevice are installed
 separately and are not included in `bridge-dfu.zip`. Generated application
 binaries incorporate framework code, so their distribution must also respect
 the relevant dependency notices and terms.
+
+## Hardware illustration
+
+The [1.8 V modification illustration](docs/images/supermini-1v8-modification.png)
+was prepared from a SuperMini pinout supplied by the maintainer, with English
+annotations added for this project. The original pinout's publisher and license
+were not identified; this project's GPL notice does not relicense the underlying
+third-party artwork. See [image notes](docs/images/README.md) for its scope and
+technical references.
