@@ -60,7 +60,7 @@ of the capacitors facing the MCU: **VDD is the upper-right marked terminal;
 VDDH is the lower-left one**. Keep both capacitors installed and join only these
 two terminals with solder. Leave their opposite terminals untouched.
 
-![Close-up: solder together the two blue-marked capacitor terminals, VDD and VDDH; the orange line shows the bridge](docs/images/supermini-vdd-vddh-solder-bridge.png)
+![Close-up: solder together the two highlighted capacitor terminals labeled VDD and VDDH; the orange line shows the bridge](docs/images/supermini-vdd-vddh-solder-bridge.png)
 
 The orange line shows the physical solder bridge. The overview's supply inset
 shows the same connection electrically. [Image notes](docs/images/README.md).

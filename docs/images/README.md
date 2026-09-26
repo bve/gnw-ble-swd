@@ -13,8 +13,9 @@ capacitor terminals used to join VDD and VDDH with solder.
 
 The annotated illustrations were produced using the built-in `imagegen` tool.
 The overview's inset represents the electrical supply connection. The close-up
-preserves the maintainer's blue pad markings and adds a short orange bridge
-between them: upper-right VDD and lower-left VDDH, both on the MCU-facing ends
+uses clean VDD and VDDH labels and orange outlines at the maintainer's specified
+solder points, joined by a short orange bridge: upper-right VDD and lower-left
+VDDH, both on the MCU-facing ends
 of the two adjacent capacitors. These are the solder points on the pictured
 revision; check continuity when adapting the modification to another board.
 
@@ -31,11 +32,13 @@ instructions, and keep the removal marks and connection labels clearly readable.
 
 ## Solder-bridge close-up edit brief
 
-Preserve the supplied close-up and its original blue arrows and VDD/VDDH labels.
-Add only a short orange line between the two blue-marked adjacent capacitor
-terminals. Keep component placement unchanged. Add English title and captions
-outside the board image: join these two terminals with solder; they face the MCU;
-the modified SuperMini uses 1.8 V from Game & Watch without a level shifter.
+Preserve the board close-up and the exact two solder points identified by the
+maintainer. Remove all handwritten arrows and labels. Add crisp VDD and VDDH
+label boxes with thin leaders to the correct terminals, orange terminal outlines,
+and a short thicker orange bridge joining them. Keep component placement and
+the bridge location unchanged. Use English title and captions: join these two
+highlighted terminals with solder; they face the MCU; the modified SuperMini
+uses 1.8 V from Game & Watch without a level shifter.
 
 ## References
 

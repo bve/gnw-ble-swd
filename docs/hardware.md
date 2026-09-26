@@ -28,12 +28,12 @@ layout. Their positions were cross-checked against the matching
 The maintainer supplied this close-up identifying the two capacitor terminals
 used for the VDD–VDDH bridge on the pictured board:
 
-![VDD–VDDH solder bridge between the two blue-marked capacitor terminals](images/supermini-vdd-vddh-solder-bridge.png)
+![VDD–VDDH solder bridge between the two orange-highlighted capacitor terminals](images/supermini-vdd-vddh-solder-bridge.png)
 
 Orient the board with the USB connector above the MCU. The marked capacitors
 are beside the MCU's upper-left edge. Use their **MCU-facing terminals**:
 the upper-right marked pad is VDD, and the adjacent lower-left marked pad is
-VDDH. Join the two blue-marked terminals with a small solder bridge, following
+VDDH. Join the two highlighted terminals with a small solder bridge, following
 the orange line. Both capacitors remain installed; their opposite terminals
 are left untouched. No separate jumper wire is needed between these pads.
 
