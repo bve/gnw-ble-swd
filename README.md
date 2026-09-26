@@ -3,10 +3,10 @@
 [![CI](https://github.com/bve/gnw-ble-swd/actions/workflows/ci.yml/badge.svg)](https://github.com/bve/gnw-ble-swd/actions/workflows/ci.yml)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-Firmware for an **nRF52840 SuperMini** that turns BLE commands into SWD
-transactions. Developed as a wireless companion for Nintendo Game & Watch,
-the bridge exposes target memory, core registers, and execution control over
-a documented BLE protocol.
+I built this firmware to use an **nRF52840 SuperMini** as a wireless SWD
+companion for my Nintendo Game & Watch. It turns BLE commands into SWD
+transactions, exposing target memory, core registers, and execution control
+over a documented BLE protocol.
 
 This repository contains **only the nRF companion firmware** and the board files,
 build scripts, tests, and documentation needed to develop it. It has no retro-go
@@ -30,33 +30,33 @@ flowchart LR
 - BLE command to enter the existing Adafruit Legacy DFU bootloader.
 - Application-only DFU ZIP generation for USB installation and later BLE updates.
 
-Hardware validation has used a **Game & Watch Zelda, STM32H7B0, and 64 MiB
+I tested the bridge with my **Game & Watch Zelda, STM32H7B0, and 64 MiB
 MX25U51245 external flash**. The SWD memory engine is separate from the BLE
-transport, but arbitrary ARM targets have not been validated. Target-specific
+transport, but I have not validated other ARM targets. Target-specific
 flash algorithms run in the host/target tooling; this firmware supplies SWD
 access. It is not a CMSIS-DAP BLE implementation or a GDB server.
 
 ## Wiring
 
-The maintainer's build uses the SuperMini board shown below, modified to run
-directly from the Game & Watch's **1.8 V supply**. **No level shifter is needed
-in this build:** the nRF GPIO and the target use the same logic voltage.
+I use the SuperMini board shown below, which I modified to run directly from
+my Game & Watch's **1.8 V supply**. **No level shifter is needed in my build:**
+the nRF GPIO and the target use the same logic voltage.
 
-The hardware modifications are:
+I made these hardware modifications:
 
-1. Remove the board's power-path MOSFET and the diode next to it.
-2. Join the two marked capacitor terminals with solder to bridge **VDD and VDDH**;
+1. I removed the board's power-path MOSFET and the diode next to it.
+2. I joined the two marked capacitor terminals with solder to bridge **VDD and VDDH**;
    see the [close-up below](#solder-bridge).
-3. Power the joined VDD/VDDH rail directly from the Game & Watch's 1.8 V supply
-   pin and connect a common ground.
+3. I powered the joined VDD/VDDH rail directly from the Game & Watch's 1.8 V
+   supply pin and connected a common ground.
 
 ![Modified SuperMini: remove the power-path MOSFET and adjacent diode, join VDD and VDDH, power at 1.8 V, and connect SWD directly](docs/images/supermini-1v8-modification.png)
 
 ### Solder bridge
 
-The maintainer identified these two adjacent capacitor terminals as the jumper
-points. With USB above the MCU, they lie along its upper-left edge, on the ends
-of the capacitors facing the MCU: **VDD is the upper-right marked terminal;
+I joined these two adjacent capacitor terminals with solder. With USB above
+the MCU, they lie along its upper-left edge, on the ends of the capacitors
+facing the MCU: **VDD is the upper-right marked terminal;
 VDDH is the lower-left one**. Keep both capacitors installed and join only these
 two terminals with solder. Leave their opposite terminals untouched.
 

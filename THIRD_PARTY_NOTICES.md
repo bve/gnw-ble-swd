@@ -4,9 +4,9 @@ Copyright (C) 2026 bve and contributors.
 
 The companion-specific source, board configuration, build scripts, native tests,
 and documentation in this repository are licensed under GNU GPL version 3 only
-(`GPL-3.0-only`). See [LICENSE](LICENSE). They were extracted by their author from
-the BLE companion portion of a Game & Watch integration and published here as
-an independent project. No retro-go or emulator implementation is included.
+(`GPL-3.0-only`). See [LICENSE](LICENSE). I extracted the BLE companion from my
+Game & Watch integration and published it here as an independent project.
+No retro-go or emulator implementation is included.
 
 Dependencies are obtained separately by PlatformIO and keep their own licenses.
 This project's GPL notice does not relicense them. Source links below identify
@@ -45,14 +45,14 @@ the relevant dependency notices and terms.
 
 ## Hardware illustration
 
-The [1.8 V modification illustration](docs/images/supermini-1v8-modification.png)
-was prepared from a SuperMini pinout supplied by the maintainer, with English
-annotations added for this project. The original pinout's publisher and license
-were not identified; this project's GPL notice does not relicense the underlying
+I used a SuperMini pinout as the reference for the
+[1.8 V modification illustration](docs/images/supermini-1v8-modification.png),
+with English annotations added for this project. The original pinout's publisher
+and license were not identified; this project's GPL notice does not relicense the underlying
 third-party artwork. See [image notes](docs/images/README.md) for its scope and
 technical references.
 
-The [solder-bridge close-up](docs/images/supermini-vdd-vddh-solder-bridge.png)
-uses an additional crop supplied and marked by the maintainer to identify the
-VDD/VDDH capacitor terminals. The English captions and orange connection marker
-were added for this documentation; the same underlying-artwork notice applies.
+For the [solder-bridge close-up](docs/images/supermini-vdd-vddh-solder-bridge.png),
+I marked the VDD/VDDH capacitor terminals I joined on my board. The English
+captions and orange connection marker were added for this documentation;
+the same underlying-artwork notice applies.

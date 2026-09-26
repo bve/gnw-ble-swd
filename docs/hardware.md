@@ -2,7 +2,7 @@
 
 ## Target and GPIO numbering
 
-The validated target is a Game & Watch Zelda with STM32H7B0 and MX25U51245
+I tested the bridge on my Game & Watch Zelda with STM32H7B0 and MX25U51245
 64 MiB flash. Flash access goes through the STM32 and GnWManager's RAM helper;
 the companion does not need wires to the console's external flash chip.
 
@@ -10,12 +10,12 @@ GPIO names below are Nordic port/pin numbers. Check the pinout of your exact
 SuperMini revision. Its own SWD programming pads are inputs for programming the
 nRF52840, not outputs for programming the console.
 
-## Tested build: modified SuperMini powered at 1.8 V
+## My build: modified SuperMini powered at 1.8 V
 
-The maintainer uses the SuperMini revision illustrated in the README, with its
-power-path MOSFET and the neighboring diode removed. The nRF VDD and VDDH nets
-are bridged, and the joined supply is powered directly from the Game & Watch's
-1.8 V supply pin. Ground is shared between the boards.
+I use the SuperMini revision illustrated in the README. I removed its power-path
+MOSFET and the neighboring diode, bridged the nRF VDD and VDDH nets, and powered
+the joined supply directly from my Game & Watch's 1.8 V supply pin. I connected
+a common ground between the boards.
 
 ![SuperMini modifications for direct 1.8 V power and SWD](images/supermini-1v8-modification.png)
 
@@ -25,8 +25,8 @@ layout. Their positions were cross-checked against the matching
 
 ### Exact VDD–VDDH solder points
 
-The maintainer supplied this close-up identifying the two capacitor terminals
-used for the VDD–VDDH bridge on the pictured board:
+This close-up shows the two capacitor terminals I joined with solder to bridge
+VDD and VDDH on my board:
 
 ![VDD–VDDH solder bridge between the two orange-highlighted capacitor terminals](images/supermini-vdd-vddh-solder-bridge.png)
 
@@ -37,13 +37,13 @@ VDDH. Join the two highlighted terminals with a small solder bridge, following
 the orange line. Both capacitors remain installed; their opposite terminals
 are left untouched. No separate jumper wire is needed between these pads.
 
-This physical location comes from the maintainer's board. Verify the nets by
+These are the solder points I used on my board. Verify the nets by
 continuity if your SuperMini revision differs. The overview's supply inset
 remains an electrical diagram of the same connection.
 
-**This build does not use or need a level shifter.** The nRF GPIO run from the
-same 1.8 V rail as the target. P0.06 connects directly to target SWDIO, P0.08 to
-SWCLK, and P0.20 to NRST. Leave P0.17 disconnected.
+**I do not use or need a level shifter in this build.** The nRF GPIO run from
+the same 1.8 V rail as the target. I connected P0.06 directly to target SWDIO,
+P0.08 to SWCLK, and P0.20 to NRST, and left P0.17 disconnected.
 
 | Modified SuperMini | Game & Watch |
 | --- | --- |
@@ -98,8 +98,8 @@ BLE DFU bootloader, allowing later updates without a USB cable.
 The direct connections above apply to the modified 1.8 V board. An unmodified
 SuperMini with 3.3 V GPIO requires level translation for a 1.8 V Game & Watch.
 For that alternative, use a suitable bidirectional translator for SWDIO and an
-output translator for SWCLK; P0.17 supplies the SWDIO direction signal. This is
-not part of the maintainer's tested wiring shown in the README.
+output translator for SWCLK; P0.17 supplies the SWDIO direction signal. I do not
+use this alternative in my build shown in the README.
 
 ## Bootloader requirements
 
@@ -116,7 +116,7 @@ update formats.
 
 1. Connect USB and double-tap the SuperMini reset button. If a UF2 drive appears,
    save `INFO_UF2.TXT` and inspect its board, bootloader, and SoftDevice versions.
-2. Reuse a compatible installed bootloader. Hardware validation used a
+2. Reuse a compatible installed bootloader. I tested with a
    nice!nano 0.6.0 bootloader with S140 6.1.1.
 3. If replacement is necessary, follow the board-specific
    [nice!nano recovery instructions](https://nicekeyboards.com/docs/nice-nano/troubleshooting/)

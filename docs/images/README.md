@@ -5,23 +5,21 @@ Assets:
 - [supermini-1v8-modification.png](supermini-1v8-modification.png): modification overview.
 - [supermini-vdd-vddh-solder-bridge.png](supermini-vdd-vddh-solder-bridge.png): exact solder points.
 
-The maintainer supplied the original black SuperMini pinout and described the
-working modification: remove the power-path MOSFET and adjacent diode, join VDD
-and VDDH, and power the nRF from the Game & Watch's 1.8 V rail with common ground.
-The maintainer subsequently supplied a close-up marking the two adjacent
-capacitor terminals used to join VDD and VDDH with solder.
+I used the black SuperMini pinout to illustrate my working modification:
+I removed the power-path MOSFET and adjacent diode, joined VDD and VDDH, and
+powered the nRF from my Game & Watch's 1.8 V rail with common ground. I marked
+the two adjacent capacitor terminals I joined with solder in a close-up.
 
-The annotated illustrations were produced using the built-in `imagegen` tool.
+I used the built-in `imagegen` tool to prepare the annotated illustrations.
 The overview's inset represents the electrical supply connection. The close-up
-uses clean VDD and VDDH labels and orange outlines at the maintainer's specified
-solder points, joined by a short orange bridge: upper-right VDD and lower-left
-VDDH, both on the MCU-facing ends
-of the two adjacent capacitors. These are the solder points on the pictured
-revision; check continuity when adapting the modification to another board.
+uses clean VDD and VDDH labels and orange outlines at my solder points, joined
+by a short orange bridge: upper-right VDD and lower-left VDDH, both on the
+MCU-facing ends of the two adjacent capacitors. These are the solder points on
+my board revision; check continuity when adapting the modification to another board.
 
 ## Overview edit brief
 
-Annotate the supplied SuperMini front/back illustration in English. Mark the
+Annotate my SuperMini front/back reference illustration in English. Mark the
 power-path MOSFET and the adjacent diode for removal. Identify the rear VDD and
 GND test pads. Show VDD joined to VDDH in a separate electrical inset supplied
 from Game & Watch 1.8 V, without inventing a physical VDDH solder point. Include
@@ -32,8 +30,8 @@ instructions, and keep the removal marks and connection labels clearly readable.
 
 ## Solder-bridge close-up edit brief
 
-Preserve the board close-up and the exact two solder points identified by the
-maintainer. Remove all handwritten arrows and labels. Add crisp VDD and VDDH
+Preserve the board close-up and the exact two solder points I marked.
+Remove all handwritten arrows and labels. Add crisp VDD and VDDH
 label boxes with thin leaders to the correct terminals, orange terminal outlines,
 and a short thicker orange bridge joining them. Keep component placement and
 the bridge location unchanged. Use English title and captions: join these two

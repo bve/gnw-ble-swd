@@ -76,5 +76,5 @@ validation, and idle timing including timer wraparound. CI also compiles the
 complete nRF firmware and checks the generated DFU archive.
 
 These checks do not replace radio, voltage, or bootloader validation on hardware.
-The source was extracted from a working Zelda/SuperMini integration, but this
-repository does not include its host tools, private logs, or console images.
+I extracted this source from my working Zelda/SuperMini integration. This
+repository does not include the host tools, private logs, or console images.
