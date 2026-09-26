@@ -55,7 +55,7 @@ VDD and VDDH on my board:
 
 ![VDD–VDDH solder bridge between the two orange-highlighted capacitor terminals](images/supermini-vdd-vddh-solder-bridge.png)
 
-Orient the board with the USB connector above the MCU. The marked capacitors
+Orient the board with the USB-connector end above the MCU. The marked capacitors
 are beside the MCU's upper-left edge. Use their **MCU-facing terminals**:
 the upper-right marked pad is VDD, and the adjacent lower-left marked pad is
 VDDH. Join the two highlighted terminals with a small solder bridge, following
@@ -90,6 +90,17 @@ bridge between the actual VDD/VDDH nets is essential to the modification.
 The firmware does not change UICR or REGOUT0.
 
 ## Power and USB after the modification
+
+For a permanent installation, I recommend removing the SuperMini's **USB
+connector and battery-charging IC** once initial programming and a full BLE
+update have succeeded. The nRF gets its power from the Game & Watch, so it does
+not need the SuperMini's battery charger. This is an additional recommendation;
+the MOSFET/diode removal and VDD–VDDH bridge described above are still required
+for my 1.8 V modification.
+
+Keep the nRF's own VDD, GND, DIO, and CLK programming pads accessible for SWD
+recovery after removing the USB connector. The USB instructions below apply
+while the connector is still fitted, or if you reconnect USB for recovery.
 
 Disconnect all power before modifying the board. Check the component locations
 and continuity on your exact revision; SuperMini clones can differ. Do not
@@ -150,7 +161,8 @@ The application uses the internal low-frequency RC oscillator, so it does not
 require a populated 32.768 kHz crystal. The bootloader has its own clock setup;
 verify that BLE DFU also works on a crystal-less board.
 
-Before enclosing the hardware, complete one full BLE application update and
-confirm that `GW-SWD` returns. Keep USB reset/recovery accessible. The build
-packages contain the application only and do not install or replace the
-bootloader or SoftDevice.
+Before removing the USB connector or enclosing the hardware, complete one full
+BLE application update and confirm that `GW-SWD` returns. Keep the nRF's own SWD
+programming pads accessible for recovery; if you retain USB, keep its connector
+and reset button accessible too. The build packages contain the application only
+and do not install or replace the bootloader or SoftDevice.

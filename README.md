@@ -10,6 +10,11 @@ An nRF52840 board stays wired inside the console and receives firmware from my
 computer. The Game & Watch powers the nRF, so subsequent console updates need
 **no USB connection to either board**.
 
+In my build, adding the nRF changed the console's power consumption only slightly.
+When the bridge is not in use, the nRF automatically enters a low-power idle
+state while remaining available over BLE. It wakes to handle new commands;
+see [idle power behavior](docs/architecture.md#idle-power-behavior) for details.
+
 ```text
 Computer → Bluetooth LE → nRF52840 → five wires → Game & Watch
 ```
@@ -50,6 +55,11 @@ I made three changes to the pictured SuperMini:
 2. I joined the two marked capacitor terminals with solder, connecting **VDD to VDDH**.
 3. I powered that joined rail from **VDD (pin 4)** in the Game & Watch's debug
    header, which supplies **1.8 V** in my build.
+
+For a permanent installation, I also recommend **removing the SuperMini's USB
+connector and battery-charging IC** after initial programming and a successful
+BLE update. The console powers the nRF, so the SuperMini's charger is not needed.
+Keep the nRF's own SWD programming pads accessible for recovery.
 
 **No level shifter is needed in my build:** the nRF and Game & Watch use the same
 1.8 V logic level. These direct connections require the modified power circuit.
@@ -165,7 +175,8 @@ With `GNW_BLE_DEVICE` set, build the companion application and upload its DFU pa
 
 This updates the **nRF application**. The retro-go `.bin` images above update the
 **Game & Watch**. The DFU package does not replace the bootloader or SoftDevice;
-an interrupted single-bank update can require USB recovery.
+an interrupted single-bank update can require wired recovery. If you remove the
+USB connector, keep access to the nRF's own SWD programming pads.
 
 </details>
 
