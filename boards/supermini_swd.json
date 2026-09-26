@@ -1,0 +1,32 @@
+{
+  "name": "SuperMini nRF52840 SWD bridge (S140 6.1.1)",
+  "vendor": "Generic",
+  "url": "https://nicekeyboards.com/docs/nice-nano/",
+  "frameworks": ["arduino"],
+  "build": {
+    "core": "nRF5",
+    "cpu": "cortex-m4",
+    "mcu": "nrf52840",
+    "f_cpu": "64000000L",
+    "extra_flags": "-DNRF52840_XXAA -DARDUINO_NRF52840_SUPERMINI",
+    "variant": "supermini",
+    "variants_dir": "variants",
+    "usb_product": "GameWatch BLE SWD",
+    "hwids": [["0x239A", "0x80B3"], ["0x239A", "0x00B3"]],
+    "bsp": {"name": "adafruit"},
+    "arduino": {"ldscript": "bridge.ld"},
+    "softdevice": {"sd_flags": "-DS140", "sd_name": "s140", "sd_version": "6.1.1", "sd_fwid": "0x00B6"},
+    "bootloader": {"settings_addr": "0xFF000"}
+  },
+  "upload": {
+    "maximum_ram_size": 237568,
+    "maximum_size": 815104,
+    "speed": 115200,
+    "protocol": "nrfutil",
+    "protocols": ["nrfutil", "cmsis-dap", "jlink", "stlink"],
+    "use_1200bps_touch": true,
+    "require_upload_port": true,
+    "wait_for_upload_port": true
+  },
+  "debug": {"jlink_device": "nRF52840_xxAA", "svd_path": "nrf52840.svd"}
+}
