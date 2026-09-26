@@ -51,3 +51,8 @@ annotations added for this project. The original pinout's publisher and license
 were not identified; this project's GPL notice does not relicense the underlying
 third-party artwork. See [image notes](docs/images/README.md) for its scope and
 technical references.
+
+The [solder-bridge close-up](docs/images/supermini-vdd-vddh-solder-bridge.png)
+uses an additional crop supplied and marked by the maintainer to identify the
+VDD/VDDH capacitor terminals. The English captions and orange connection marker
+were added for this documentation; the same underlying-artwork notice applies.

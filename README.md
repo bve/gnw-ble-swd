@@ -45,15 +45,25 @@ in this build:** the nRF GPIO and the target use the same logic voltage.
 The hardware modifications are:
 
 1. Remove the board's power-path MOSFET and the diode next to it.
-2. Bridge the nRF **VDD and VDDH** supply nets.
+2. Join the two marked capacitor terminals with solder to bridge **VDD and VDDH**;
+   see the [close-up below](#solder-bridge).
 3. Power the joined VDD/VDDH rail directly from the Game & Watch's 1.8 V supply
    pin and connect a common ground.
 
 ![Modified SuperMini: remove the power-path MOSFET and adjacent diode, join VDD and VDDH, power at 1.8 V, and connect SWD directly](docs/images/supermini-1v8-modification.png)
 
-The inset shows the electrical VDD–VDDH connection, not a physical jumper route:
-VDDH is not labeled in the supplied pinout. Identify the net by continuity on
-your board. [Image notes](docs/images/README.md).
+### Solder bridge
+
+The maintainer identified these two adjacent capacitor terminals as the jumper
+points. With USB above the MCU, they lie along its upper-left edge, on the ends
+of the capacitors facing the MCU: **VDD is the upper-right marked terminal;
+VDDH is the lower-left one**. Keep both capacitors installed and join only these
+two terminals with solder. Leave their opposite terminals untouched.
+
+![Close-up: solder together the two blue-marked capacitor terminals, VDD and VDDH; the orange line shows the bridge](docs/images/supermini-vdd-vddh-solder-bridge.png)
+
+The orange line shows the physical solder bridge. The overview's supply inset
+shows the same connection electrically. [Image notes](docs/images/README.md).
 
 This puts the nRF52840 in Normal Voltage mode. It is a physical board
 modification; no firmware or UICR/REGOUT0 change is required for this supply mode.

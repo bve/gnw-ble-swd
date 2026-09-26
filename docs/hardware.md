@@ -22,9 +22,24 @@ are bridged, and the joined supply is powered directly from the Game & Watch's
 The removal marks identify the power-path MOSFET and adjacent diode in this
 layout. Their positions were cross-checked against the matching
 [SuperMini reverse-engineering reference](https://github.com/sasodoma/nrf52840-promicro).
-The VDD–VDDH inset is an electrical connection, not a drawing of the maintainer's
-physical jumper: the supplied pinout does not label VDDH. Identify the actual
-net by continuity before selecting a solder point.
+
+### Exact VDD–VDDH solder points
+
+The maintainer supplied this close-up identifying the two capacitor terminals
+used for the VDD–VDDH bridge on the pictured board:
+
+![VDD–VDDH solder bridge between the two blue-marked capacitor terminals](images/supermini-vdd-vddh-solder-bridge.png)
+
+Orient the board with the USB connector above the MCU. The marked capacitors
+are beside the MCU's upper-left edge. Use their **MCU-facing terminals**:
+the upper-right marked pad is VDD, and the adjacent lower-left marked pad is
+VDDH. Join the two blue-marked terminals with a small solder bridge, following
+the orange line. Both capacitors remain installed; their opposite terminals
+are left untouched. No separate jumper wire is needed between these pads.
+
+This physical location comes from the maintainer's board. Verify the nets by
+continuity if your SuperMini revision differs. The overview's supply inset
+remains an electrical diagram of the same connection.
 
 **This build does not use or need a level shifter.** The nRF GPIO run from the
 same 1.8 V rail as the target. P0.06 connects directly to target SWDIO, P0.08 to
