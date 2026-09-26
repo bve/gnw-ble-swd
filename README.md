@@ -48,7 +48,8 @@ I made three changes to the pictured SuperMini:
 
 1. I removed the power-path MOSFET and the diode next to it.
 2. I joined the two marked capacitor terminals with solder, connecting **VDD to VDDH**.
-3. I powered that joined rail from the Game & Watch's **1.8 V supply**.
+3. I powered that joined rail from **VDD (pin 4)** in the Game & Watch's debug
+   header, which supplies **1.8 V** in my build.
 
 **No level shifter is needed in my build:** the nRF and Game & Watch use the same
 1.8 V logic level. These direct connections require the modified power circuit.
@@ -73,17 +74,32 @@ The joined rail must stay at 1.8 V when connected to the console.
 
 ## 3. Solder just five wires to the Game & Watch
 
-| Wire | Game & Watch | Modified SuperMini |
-| ---: | --- | --- |
-| 1 | 1.8 V supply | VDD, already bridged to VDDH |
-| 2 | GND | GND |
-| 3 | SWDIO | P0.06 / D1 |
-| 4 | SWCLK | P0.08 / D0 |
-| 5 | NRST | P0.20 / D3 |
+**All five wires go to the same row of holes on the Game & Watch**, including
+the wire that powers the nRF. I take 1.8 V from the header's **VDD** contact.
 
-These are the only five connections between the boards. **Leave P0.17 / D2
-unconnected.** Use the numbered GPIO pins above, not the nRF's own DIO/CLK debug
-pads. NRST goes to the Game & Watch reset signal, not the SuperMini reset pin.
+There are two header layouts: **five holes on Mario** and **seven on Zelda**.
+The first five contacts have the same order. Locate the small triangle on the
+PCB: it marks **pin 1**. Count away from it, left to right in this diagram,
+viewed from the component side:
+
+![Mario five-hole and Zelda seven-hole headers: pin 1 NRST, 2 SWDIO, 3 GND, 4 VDD at 1.8 V, 5 SWCLK; Zelda pins 6 and 7 unused](docs/images/game-watch-debug-headers.svg)
+
+| Header pin | Game & Watch | Modified SuperMini |
+| ---: | --- | --- |
+| 1, next to the triangle | NRST / !RESET | P0.20 / D3 |
+| 2 | SWDIO / SWIO | P0.06 / D1 |
+| 3 | GND | GND |
+| **4** | **VDD: 1.8 V power from the console** | **VDD, already bridged to VDDH** |
+| 5 | SWCLK | P0.08 / D0 |
+
+On the seven-hole header, **leave holes 6 and 7 unconnected**. No wires to
+separate test pads or battery terminals are needed. See the
+[header reference](docs/hardware.md#game--watch-debug-header) for the pinout source.
+
+These are the only five connections between the boards. **Leave the nRF's
+P0.17 / D2 unconnected.** Use the numbered GPIO pins above, not the nRF's own
+DIO/CLK debug pads. NRST goes to the Game & Watch reset signal, not the SuperMini
+reset pin.
 
 Power on the console. It now powers the nRF, and **GW-SWD** should be discoverable
 over Bluetooth. No USB cable is needed for the following steps.

@@ -1,9 +1,11 @@
-# Hardware illustration
+# Hardware illustrations
 
 Assets:
 
 - [supermini-1v8-modification.png](supermini-1v8-modification.png): modification overview.
 - [supermini-vdd-vddh-solder-bridge.png](supermini-vdd-vddh-solder-bridge.png): exact solder points.
+- [game-watch-debug-headers.svg](game-watch-debug-headers.svg): five-hole Mario and
+  seven-hole Zelda debug headers, viewed from the component side.
 
 I used the black SuperMini pinout to illustrate my working modification:
 I removed the power-path MOSFET and adjacent diode, joined VDD and VDDH, and
@@ -37,6 +39,18 @@ and a short thicker orange bridge joining them. Keep component placement and
 the bridge location unchanged. Use English title and captions: join these two
 highlighted terminals with solder; they face the MCU; the modified SuperMini
 uses 1.8 V from Game & Watch without a level shifter.
+
+## Game & Watch header diagram
+
+I drew this vector schematic to show the two header layouts and the five holes
+used by the bridge. It is not to scale. The small PCB triangle marks pin 1;
+the first five holes are NRST, SWDIO, GND, VDD, and SWCLK on both layouts.
+I use VDD at pin 4 as the 1.8 V supply for my modified nRF. The Zelda header's
+extra two holes are unused by this project and stay unconnected.
+
+I checked the layout against the board photos and the
+[Game & Watch backup connector reference](https://github.com/ghidraninja/game-and-watch-backup#connecting-the-debugger).
+The SVG is original artwork for this repository, licensed under GPL-3.0-only.
 
 ## References
 

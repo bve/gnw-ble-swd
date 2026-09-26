@@ -10,12 +10,37 @@ GPIO names below are Nordic port/pin numbers. Check the pinout of your exact
 SuperMini revision. Its own SWD programming pads are inputs for programming the
 nRF52840, not outputs for programming the console.
 
+## Game & Watch debug header
+
+I solder all five wires to the console's debug header, including power and
+ground. **VDD at pin 4 supplies the modified nRF's joined VDD/VDDH rail**;
+it provides 1.8 V in my build. I do not need a separate power wire from elsewhere
+on the console.
+
+The Mario board has a five-hole header; the Zelda board has seven holes.
+Viewed from the component side with the small pin-1 triangle on the left,
+the first five holes are **NRST, SWDIO, GND, VDD, SWCLK**, in that order.
+`!RESET` is another label for NRST, and `SWIO` means SWDIO.
+
+![The two Game & Watch debug-header layouts share the same first five contacts](images/game-watch-debug-headers.svg)
+
+Use the [five-wire connection table in step 3](../README.md#3-solder-just-five-wires-to-the-game--watch)
+for the nRF destinations. Leave the Zelda header's extra holes 6 and 7
+unconnected. All five connections fit in this one row; the other test pads
+visible elsewhere on the PCB are unnecessary for this installation.
+
+The shared pinout and pin-1 triangle are documented in the
+[Game & Watch backup project's connector reference](https://github.com/ghidraninja/game-and-watch-backup#connecting-the-debugger).
+That reference describes VDD as a voltage-reference connection for an external
+debug probe. In my installation, I use it to **power the modified 1.8 V nRF
+from the console**. Do not feed an external 3.3 V supply into this contact.
+
 ## My build: modified SuperMini powered at 1.8 V
 
 I use the SuperMini revision illustrated in the README. I removed its power-path
 MOSFET and the neighboring diode, bridged the nRF VDD and VDDH nets, and powered
-the joined supply directly from my Game & Watch's 1.8 V supply pin. I connected
-a common ground between the boards.
+the joined supply directly from VDD at pin 4 of my Game & Watch's debug header.
+I connected a common ground through pin 3 of that same header.
 
 ![SuperMini modifications for direct 1.8 V power and SWD](images/supermini-1v8-modification.png)
 
@@ -44,15 +69,6 @@ remains an electrical diagram of the same connection.
 **I do not use or need a level shifter in this build.** The nRF GPIO run from
 the same 1.8 V rail as the target. I connected P0.06 directly to target SWDIO,
 P0.08 to SWCLK, and P0.20 to NRST, and left P0.17 disconnected.
-
-| Modified SuperMini | Game & Watch |
-| --- | --- |
-| VDD joined to VDDH | 1.8 V supply |
-| GND | GND |
-| P0.06 / D1 | SWDIO |
-| P0.08 / D0 | SWCLK |
-| P0.20 / D3 | NRST |
-| P0.17 / D2 | No connection |
 
 The removed MOSFET is part of the SuperMini's power path, not an external reset
 transistor. Target reset is handled directly by P0.20 in Nordic drive mode

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="610" viewBox="0 0 1060 610" role="img" aria-labelledby="title description">
+  <title id="title">Game &amp; Watch: five wires from one header</title>
+  <desc id="description">Component-side schematic of the Mario five-hole and Zelda seven-hole headers. Count from the small triangle: pin 1 NRST, 2 SWDIO, 3 GND, 4 VDD, 5 SWCLK. VDD supplies 1.8 volts to the modified nRF. Leave Zelda pins 6 and 7 unconnected.</desc>
+  <defs>
+    <g id="hole">
+      <circle r="25" fill="#fff" stroke="currentColor" stroke-width="6"/>
+      <circle r="18" fill="#172b27"/>
+    </g>
+  </defs>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; fill: #172b27; }
+    .heading { font-size: 23px; font-weight: 700; }
+    .label { font-size: 21px; font-weight: 700; text-anchor: middle; }
+    .number { font-size: 19px; font-weight: 700; text-anchor: middle; fill: #fff; }
+    .note { font-size: 18px; }
+    .unused { fill: #66736e; }
+    .power { fill: #b52536; }
+  </style>
+  <rect width="1060" height="610" rx="20" fill="#fff"/>
+  <text x="40" y="49" font-size="30" font-weight="700">Game &amp; Watch: five wires from one header</text>
+  <text x="40" y="83" class="note">Component side. Count from the small triangle marking pin 1. Schematic, not to scale.</text>
+
+  <text x="40" y="136" class="heading">5-hole header · Super Mario Bros.</text>
+  <rect x="170" y="164" width="580" height="76" rx="16" fill="#e7f1eb" stroke="#b9ccbf"/>
+  <path d="M 126,190 L 149,202 L 126,214 Z" fill="#647965"/>
+  <text x="120" y="263" font-size="16" text-anchor="middle">Triangle</text>
+  <g transform="translate(220 202)" color="#b88d00"><use href="#hole"/><text y="7" class="number">1</text></g>
+  <text x="220" y="269" class="label">NRST</text>
+  <g transform="translate(340 202)" color="#008eae"><use href="#hole"/><text y="7" class="number">2</text></g>
+  <text x="340" y="269" class="label">SWDIO</text>
+  <g transform="translate(460 202)" color="#53635b"><use href="#hole"/><text y="7" class="number">3</text></g>
+  <text x="460" y="269" class="label">GND</text>
+  <g transform="translate(580 202)" color="#d34050"><use href="#hole"/><text y="7" class="number">4</text></g>
+  <text x="580" y="269" class="label power">VDD</text>
+  <g transform="translate(700 202)" color="#bd6100"><use href="#hole"/><text y="7" class="number">5</text></g>
+  <text x="700" y="269" class="label">SWCLK</text>
+  <text x="580" y="297" class="note power" text-anchor="middle">1.8 V OUT</text>
+
+  <text x="40" y="351" class="heading">7-hole header · The Legend of Zelda</text>
+  <rect x="170" y="379" width="820" height="76" rx="16" fill="#e7f1eb" stroke="#b9ccbf"/>
+  <path d="M 126,405 L 149,417 L 126,429 Z" fill="#647965"/>
+  <text x="120" y="478" font-size="16" text-anchor="middle">Triangle</text>
+  <g transform="translate(220 417)" color="#b88d00"><use href="#hole"/><text y="7" class="number">1</text></g>
+  <text x="220" y="484" class="label">NRST</text>
+  <g transform="translate(340 417)" color="#008eae"><use href="#hole"/><text y="7" class="number">2</text></g>
+  <text x="340" y="484" class="label">SWDIO</text>
+  <g transform="translate(460 417)" color="#53635b"><use href="#hole"/><text y="7" class="number">3</text></g>
+  <text x="460" y="484" class="label">GND</text>
+  <g transform="translate(580 417)" color="#d34050"><use href="#hole"/><text y="7" class="number">4</text></g>
+  <text x="580" y="484" class="label power">VDD</text>
+  <g transform="translate(700 417)" color="#bd6100"><use href="#hole"/><text y="7" class="number">5</text></g>
+  <text x="700" y="484" class="label">SWCLK</text>
+  <g transform="translate(820 417)" color="#9ca9a1"><use href="#hole"/><text y="7" class="number">6</text></g>
+  <text x="820" y="484" class="label unused">Unused</text>
+  <g transform="translate(940 417)" color="#9ca9a1"><use href="#hole"/><text y="7" class="number">7</text></g>
+  <text x="940" y="484" class="label unused">Unused</text>
+  <text x="580" y="512" class="note power" text-anchor="middle">1.8 V OUT</text>
+  <path d="M 781,500 V 511 H 979 V 500" fill="none" stroke="#9ca9a1" stroke-width="2"/>
+  <text x="880" y="538" font-size="17" text-anchor="middle" class="unused">Leave both unconnected</text>
+
+  <rect x="32" y="559" width="996" height="37" rx="8" fill="#fff0f1"/>
+  <text x="530" y="584" class="note" text-anchor="middle">Pin 4 powers the modified nRF at 1.8 V. All five wires come from this header.</text>
+</svg>
